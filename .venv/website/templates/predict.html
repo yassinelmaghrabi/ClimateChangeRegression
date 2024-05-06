@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<form action="/process_form_predict" method="post">
+    <label for="Year">Year:</label>
+    <textarea id="year" name="year"></textarea>
+    <br>
+
+    <input type="submit" value="Submit">
+</form>
+<div>
+    Predicted Temperature: {{"{:.2f}".format(val)}} C°
+
+</div>
+
+</body>
+</html>

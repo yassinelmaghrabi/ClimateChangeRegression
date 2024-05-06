@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{ plot | safe }}
+<div>
+    R2: {{"{:.2f}".format(data["r2"]*100)}}%
+    MSR: {{"{:.3f}".format(data["msr"])}}
+</div>
+
+<form action="/process_form" method="post">
+    <label for="test_size">Test Size:</label>
+    <textarea id="test_size" name="test_size"></textarea>
+    <br>
+    <label for="degree">Degree:</label>
+    <textarea id="degree" name="degree"></textarea>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

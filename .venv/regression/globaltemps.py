@@ -14,12 +14,12 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, r2_score
 
 class globaltemps:
-    def __init__(self,cleaningthreshold=2.5, deg=2,test_size=0.2):
+    def __init__(self,cleaningthreshold=2.5,degree=2,test_size=0.2):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         data_path = os.path.join(script_dir,  'data', 'GlobalTemperatures.csv')
         self.df = pd.read_csv(data_path)
         self.threshold = cleaningthreshold
-        self.train(["dt"])
+        self.train(["dt"],deg=degree,test_size=test_size)
         
 
     
@@ -50,12 +50,12 @@ class globaltemps:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
         return X_train, X_test, y_train, y_test
 
-    def train(self,features, target="LandAverageTemperature", deg=2,test_size=0.2):
+    def train(self,features, target="LandAverageTemperature", deg=2,test_size=0.2,random_state=None):
         self.preparedata()
         model = Pipeline([('poly', PolynomialFeatures(degree=deg)),
                        ('linear', linear_model.LinearRegression(fit_intercept=False))])
 
-        X_train, X_test, y_train, y_test=self.split_data(features,target)
+        X_train, X_test, y_train, y_test=self.split_data(features,target,test_size=test_size,random_state=random_state)
         self.model = model.fit(X_train,y_train)
         self.coef_ = model.named_steps['linear'].coef_
         self.y_pred = model.predict(X_test)
@@ -116,18 +116,8 @@ class globaltemps:
                 template="plotly_dark"
             )
 
-            return fig
+            return pio.to_html(fig,full_html=False)
         
 
 
 
-if __name__ == "__main__":
-    gt = globaltemps()
-    print(f"Mean Square Error: {gt.msr_}")
-    print(f"Correlation Coefficient: {gt.r2_}")
-    fig = gt.plotembed()
-    gt.df.to_csv("globalclean.csv", index=False)
-    
-    with open("plot.html", "w", encoding="utf-8") as f:
-        f.write(pio.to_html(fig,full_html=False))
-    fig.show()
