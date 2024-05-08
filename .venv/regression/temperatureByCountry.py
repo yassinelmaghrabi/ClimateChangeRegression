@@ -57,3 +57,69 @@ class tempcountry:
         country_counts = self.df['Country'].value_counts()
         countries = country_counts[country_counts > 1000].index.tolist()
         return countries
+        
+    def split_data(self, features, target, test_size = 0.2, random_state = None):
+        test_size = float(test_size)
+        X=self.df[features]
+        y=self.df[target]
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+        return X_train, X_test, y_train, y_test
+
+    def train(self, features, target='LandAverageTemperature', deg=2, test_size=0.2, random_state=None):    
+        self.preparedata()
+        model = Pipeline(['poly', PolynomialFeatures(degree=deg)),
+                         ('Linear' , Linera_model.LinearRegression(fit_intercept=False))])
+        X_train, X_test, y_train, y_tast=self.split_data(features,target,test_size=test_size,random_state=random_state)
+        self.model =  model.fit(X_train, y-train)
+        self.coef_ = model.named_steps['linear'].coef_
+        self.y_pred = model.predict(X_test)
+        seld.X_test = X_test
+        self.X_train = X_train
+        self.y_train = y_train
+        self.y_test = y_test
+        self.msr_ = mean_squared_error(y_test,self.y_pred)
+        self.r2_ =r2_score(y_test,self.y_pred)
+         
+    def predict (self,year):
+        x_df = pd.DataFrame([year], columns=['dt'])
+        val = self.model.predict(x_df)[0]
+        return val
+
+    def plotembed(self):
+        x_min = np.min(self.X_train)
+        x_max = np.max(self.X_train)
+        x_values = np.linspace(x_min, x_max, 100)
+        color_scale = np.interp(self.X_test.values.flatten(),, [x_min, x_max], [0,1])
+        scatter_test = go.Scatter(
+            x=self.X_test.values.flatten(),
+            y=self.y_test.values.flatten(),
+            mode='markers',
+            marker=dict(color=np.interp(self.X_test.values.flatten(), [x_min, x_max], [0,1]), colorscale='viridis', size=10),
+            name='Test Data'
+        )
+        scatter_train = go.scatter(
+            x=self.X_train.vlues.flatten(),
+            y=self.y_train.values.flatten(),
+            mode='markers',
+            marker=dict(color=np.interp(self.X_test.values.flatten(), [x_min, x_max], [0,1]), colorscale='viridis', size=5),
+            name='Train Data'
+        )
+        self.dfo
+        scatter_out = go.Scatter(
+            x=self.dfo.dt.values.flatten(),
+            y=self.dfo.LandAverageTeperature.values.flatten(),
+            mode='markers',
+            marker=dict(color='red', size=3),
+            name='Outliers'
+        )
+        y_values = np.polyval(self.coef_[::-1], x_values)
+        plynomial_curve = go.Scatter(x=x_values, y=y_values, mode='Lines' , line=dict(color='white' ,width=3), name='Polynomial Curve')
+
+        fig.update_layout(
+            title='Plynomial Regression Plot',
+            xaxis_title='X Values',
+            yaxis_title='Y Values',
+            template='plotly_dark'
+        )
+
+        return pio.to_html(fig,full_html=False)
