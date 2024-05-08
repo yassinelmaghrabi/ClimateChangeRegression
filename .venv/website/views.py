@@ -3,6 +3,7 @@ views = Blueprint('views' , __name__)
 from regression import globaltempsembed, globaltempsdata, globalpredict
 @views.route('/')
 def home():
+    session.clear()
     return render_template('index.html')
 
 
@@ -52,9 +53,6 @@ def global_temp():
 
     plot = globaltempsembed(deg=degree, test_size=test_size)
     data = globaltempsdata(deg=degree, test_size=test_size)
-
-    print(plot)
-
 
     return render_template('global.html', plot=plot, data=data)
 
