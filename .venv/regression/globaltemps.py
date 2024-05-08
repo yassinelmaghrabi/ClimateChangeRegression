@@ -14,11 +14,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, r2_score
 
 class globaltemps:
-    def __init__(self,cleaningthreshold=2.5,degree=2,test_size=0.2):
+    def __init__(self,degree=2,test_size=0.2):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         data_path = os.path.join(script_dir,  'data', 'GlobalTemperatures.csv')
         self.df = pd.read_csv(data_path)
-        self.threshold = cleaningthreshold
         self.train(["dt"],deg=degree,test_size=test_size)
         
 
@@ -26,8 +25,8 @@ class globaltemps:
     
     def cleandata(self):
         self.df = self.df.dropna(subset=["LandAverageTemperature"])
-        z_scores = np.abs(stats.zscore(self.df["LandAverageTemperature"]))
-        self.df = self.df[(z_scores < self.threshold)]
+        self.df=self.df[self.df['LandAverageTemperatureUncertainty'] <= 5]
+
 
     
     def preparedata(self):
@@ -35,16 +34,17 @@ class globaltemps:
         self.df["dt"] = pd.to_datetime(self.df["dt"])
         self.df["dt"]=self.df["dt"].apply(lambda x : x.year)
         self.df = self.df.groupby("dt",as_index=False).mean()
-        ransac = RANSACRegressor(random_state=0)
+        ransac = RANSACRegressor(random_state=0, residual_threshold=0.7)
         X = self.df["dt"].values.reshape(-1, 1)
         y = self.df["LandAverageTemperature"].values
         ransac.fit(X, y)
         inlier_mask = ransac.inlier_mask_
+
+        self.dfo=self.df[~inlier_mask]
         self.df = self.df[inlier_mask]
-        print( inlier_mask)
         
     def split_data(self, features, target, test_size=0.2, random_state=None):
-        
+        test_size = float(test_size)
         X = self.df[features]
         y = self.df[target]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
@@ -71,7 +71,7 @@ class globaltemps:
         val = self.model.predict(x_df)[0]
         return val
     
-    def plot(self):                               #TODO make this save figures
+    def plot(self):                             
         x_min = np.min(self.X_test)
         x_max = np.max(self.X_test)
         x_values = np.linspace(x_min, x_max, 100)
@@ -100,13 +100,21 @@ class globaltemps:
                 marker=dict(color=np.interp(self.X_train.values.flatten(), [x_min, x_max], [0, 1]), colorscale='Viridis', size=5),
                 name='Train Data'
             )
+            self.dfo
+            scatter_out = go.Scatter(
+                x=self.dfo.dt.values.flatten(),
+                y=self.dfo.LandAverageTemperature.values.flatten(),
+                mode='markers',
+                marker=dict(color="red", size=3),
+                name='Outliers'
+            )
 
             # Polynomial curve plot
             y_values = np.polyval(self.coef_[::-1], x_values)
             polynomial_curve = go.Scatter(x=x_values, y=y_values, mode='lines', line=dict(color='white', width=3), name='Polynomial Curve')
 
             # Create figure
-            fig = go.Figure([scatter_test, scatter_train, polynomial_curve])
+            fig = go.Figure([scatter_test, scatter_train, polynomial_curve, scatter_out])
 
             # Update layout
             fig.update_layout(
