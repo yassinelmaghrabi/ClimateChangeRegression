@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<form action="/process_form_predict_country" method="post">
+    <label for="Year">Year:</label>
+    <textarea id="year" name="year"></textarea>
+    <br>
+    <label for="select_option">Select Country:</label>
+    <select id="select_option" name="select_option">
+        {% for country in list %}
+        <option value="{{ country }}">{{ country }}</option>
+        {% endfor %}
+    </select>
+    <br>
+
+    <input type="submit" value="Submit">
+</form>
+<div>
+    Predicted Temperature for {{country}} in {{year}}: {{"{:.2f}".format(val)}} C°
+
+</div>
+
+</body>
+</html>
