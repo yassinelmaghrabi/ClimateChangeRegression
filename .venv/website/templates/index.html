@@ -3,12 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <title>Regression Project</title>
-    <h1 style="text-align: center;">Regression Project</h1>
+    <h1 class="title">Regression Project</h1>
     <a href="{{ url_for('views.global_temp') }}" class="button1">Global Data</a>
     <a href="{{ url_for('views.global_predict') }}" class="button1">Global Predict</a>
     <a href="{{ url_for('views.country_temp') }}" class="button1">Country Data</a>
     <a href="{{ url_for('views.country_predict') }}" class="button1">Country Predict</a>
     <a href="{{ url_for('views.report') }}" class="button1">Report</a>
+    <style>
+        body{
+            background-image: url('https://static.pexels.com/photos/414171/pexels-photo-414171.jpeg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size:cover;
+            overflow: hidden;
+            -webkit-animation: slidein 60s;
+            animation: slidein 40s;
+
+            -webkit-animation-fill-mode: forwards;
+            animation-fill-mode: forwards;
+
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+
+            -webkit-animation-direction: alternate;
+            animation-direction: alternate;              
+        }
+
+        @-webkit-keyframes slidein {
+        from {background-position: top; background-size:3000px; }
+        to {background-position: -100px 0px;background-size:2750px;}
+        }
+
+        @keyframes slidein {
+        from {background-position: top;background-size:3000px; }
+        to {background-position: -100px 0px;background-size:2750px;}
+
+        }
+        
+        .title{
+            position: relative;
+            top: 100px;
+            text-align: center;
+            color: rgb(12, 9, 9);
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .button1 {
+            position: relative;
+            top: 130px;
+            display: flex;
+            justify-content: center;
+            background-color:rgba(40, 82, 168, 0.333);
+            border-radius: 12px;
+            color: white;
+            padding: 20px 80px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 40px 350px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2),
+                        0 6px 20px 0 rgba(0, 0, 0, 0.10);
+            transition: 0.5s;
+        }
+            
+        .button1:hover{
+            background-color:  rgba(255, 255, 255, 0.234);
+            box-shadow: 1px 5px;
+        }
+
+    </style>
 </head>
 <body>
 

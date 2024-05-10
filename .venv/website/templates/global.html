@@ -3,10 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        body{
+          background-image: url('https://static.pexels.com/photos/414171/pexels-photo-414171.jpeg');
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-size:cover;
+          overflow: hidden;
+          -webkit-animation: slidein 60s;
+          animation: slidein 40s;
+    
+          -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+    
+          -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+    
+          -webkit-animation-direction: alternate;
+          animation-direction: alternate;              
+        }
+    
+        @-webkit-keyframes slidein {
+        from {background-position: top; background-size:3000px; }
+        to {background-position: -100px 0px;background-size:2750px;}
+        }
+    
+        @keyframes slidein {
+        from {background-position: top;background-size:3000px; }
+        to {background-position: -100px 0px;background-size:2750px;}
+        
+        }
+    
+        form {
+        margin-bottom: 20px;
+        }
+    
+        label {
+            font-weight: bold;
+            position: relative;
+            top: 40px; 
+            left: -190px;
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+        }
+    
+        textarea {
+            border-radius: 120px;
+            width: 300px;
+            height: 30px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 4px;
+            background-color: #f8f8f8af;
+            resize: none;
+            position: relative;
+            top: 17px;
+            display: block;
+            margin: 0 auto;
+        }
+    
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: rgba(40, 82, 168, 0.333);
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            top: 50px;
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+            box-sizing:content-box;
+            border-radius: 120px;
+            display: block;
+            transition: 0.5s;
+        }
+    
+        input[type="submit"]:hover{
+            background-color:  rgba(255, 255, 255, 0.234);
+            box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
+        }
+    
+        .center2{
+            text-align: center;
+            margin: 0 auto;
+            display: block;
+            position: relative;
+            top: 170px;
+        }
+      </style>
 </head>
 <body>
 {{ plot | safe }}
-<div>
+<div class="center2">
     R2: {{"{:.2f}".format(data["r2"]*100)}}%
     MSR: {{"{:.3f}".format(data["msr"])}}
 </div>
